@@ -49,7 +49,6 @@ func NewSshConn(c *Config) (conn *SshConn, err error) {
 	return
 }
 
-// closeRemoteSshSession closes remote session
 func (c *SshConn) ConnClose() {
 	c.Client.Close()
 }
