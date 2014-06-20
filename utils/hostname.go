@@ -5,20 +5,9 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
-	"regexp"
 	"strings"
 	"syscall"
 )
-
-//hostname max length is 255 chars
-const hostnameLength = 256
-
-// hostname: names separated by '.' every name must be max 63 chars in length
-// according to RFC 952 <name>  ::= <let>[*[<let-or-digit-or-hyphen>]<let-or-digit>]
-// according to RFC 1123 - trailing and starting digits are allowed
-var hostnameExpr = regexp.MustCompile(`^([a-zA-Z]|[0-9]|_)(([a-zA-Z]|[0-9]|-|_)*([a-zA-Z]|[0-9]|_))?(\.([a-zA-Z]|[0-9]|_)(([a-zA-Z]|[0-9]|-|_)*([a-zA-Z]|[0-9]))?)*$`)
-var hostnameLenExpr = regexp.MustCompile(`^[a-zA-Z0-9-_]{1,64}(\.([a-zA-Z0-9-_]{1,64}))*$`)
-var ipAddrExpr = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$`)
 
 var template = map[uint8]map[string]interface{}{
 	1: {
@@ -35,15 +24,8 @@ var template = map[uint8]map[string]interface{}{
 
 // SetHostname - main wrapper for the host configuration
 func SetHostname(hostname string) error {
-	switch {
-	case len(hostname) > hostnameLength:
-		return fmt.Errorf("hostname length is greater than %d", hostnameLength)
-	case !hostnameExpr.MatchString(hostname):
-		return fmt.Errorf("hostname doesn't match RFC")
-	case !hostnameLenExpr.MatchString(hostname):
-		return fmt.Errorf("hostname length")
-	case ipAddrExpr.MatchString(hostname):
-		return fmt.Errorf("hostname cannot be like an ip")
+	if err := ValidateHostname(hostname); err != nil {
+		return err
 	}
 	for _, leaf := range template {
 		for key, val := range leaf {

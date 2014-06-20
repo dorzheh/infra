@@ -1,5 +1,3 @@
-// Verification functions
-
 package utils
 
 import (
@@ -69,6 +67,30 @@ func ValidateAmountOfRam(minRequiredInMb int) error {
 	if minRequiredInMb > installedRamInMb {
 		return errors.New(fmt.Sprintf("RAM amount.Required %d.Installed %d",
 			minRequiredInMb, installedRamInMb))
+	}
+	return nil
+}
+
+//hostname max length is 255 chars
+const hostnameLength = 256
+
+// hostname: names separated by '.' every name must be max 63 chars in length
+// according to RFC 952 <name>  ::= <let>[*[<let-or-digit-or-hyphen>]<let-or-digit>]
+// according to RFC 1123 - trailing and starting digits are allowed
+var hostnameExpr = regexp.MustCompile(`^([a-zA-Z]|[0-9]|_)(([a-zA-Z]|[0-9]|-|_)*([a-zA-Z]|[0-9]|_))?(\.([a-zA-Z]|[0-9]|_)(([a-zA-Z]|[0-9]|-|_)*([a-zA-Z]|[0-9]))?)*$`)
+var hostnameLenExpr = regexp.MustCompile(`^[a-zA-Z0-9-_]{1,64}(\.([a-zA-Z0-9-_]{1,64}))*$`)
+var ipAddrExpr = regexp.MustCompile(`^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$`)
+
+func ValidateHostname(hostname string) error {
+	switch {
+	case len(hostname) > hostnameLength:
+		return fmt.Errorf("hostname length is greater than %d", hostnameLength)
+	case !hostnameExpr.MatchString(hostname):
+		return fmt.Errorf("hostname doesn't match RFC")
+	case !hostnameLenExpr.MatchString(hostname):
+		return fmt.Errorf("hostname length")
+	case ipAddrExpr.MatchString(hostname):
+		return fmt.Errorf("hostname cannot be like an ip")
 	}
 	return nil
 }
