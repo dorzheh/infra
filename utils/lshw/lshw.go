@@ -117,6 +117,7 @@ func (l *lshw) SetConfig(config *Config) {
 }
 
 func (l *lshw) Cmd() string {
+	l.makeCmd()
 	return strings.Join(l.cmd.Args, " ")
 }
 
@@ -126,12 +127,7 @@ func (l *lshw) Execute() (out []byte, err error) {
 	l.lock.Lock()
 	defer l.lock.Unlock()
 
-	if l.config.Class != All {
-		l.cmd.Args = append(l.cmd.Args, []string{"-C", string(l.config.Class)}...)
-	}
-	if l.config.Format != FormatEmpty {
-		l.cmd.Args = append(l.cmd.Args, string(l.config.Format))
-	}
+	l.makeCmd()
 	out, err = l.cmd.CombinedOutput()
 	if err != nil {
 		err = fmt.Errorf("%s [%s]", out, err)
@@ -173,4 +169,13 @@ func (l *lshw) Version() (string, error) {
 		return "", fmt.Errorf("%s [%s]", ver, err)
 	}
 	return string(ver), nil
+}
+
+func (l *lshw) makeCmd() {
+	if l.config.Class != All {
+		l.cmd.Args = append(l.cmd.Args, []string{"-C", string(l.config.Class)}...)
+	}
+	if l.config.Format != FormatEmpty {
+		l.cmd.Args = append(l.cmd.Args, string(l.config.Format))
+	}
 }
