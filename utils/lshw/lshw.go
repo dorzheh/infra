@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 	"sync"
 )
 
@@ -115,9 +116,13 @@ func (l *lshw) SetConfig(config *Config) {
 	l.lock.Unlock()
 }
 
+func (l *lshw) Cmd() string {
+	return strings.Join(l.cmd.Args, " ")
+}
+
 func (l *lshw) Execute() (out []byte, err error) {
 	l.cmdreset()
-	
+
 	l.lock.Lock()
 	defer l.lock.Unlock()
 
