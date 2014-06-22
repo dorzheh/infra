@@ -8,7 +8,7 @@ import (
 
 func TestWriteToStdout(t *testing.T) {
 	config := &Config{
-		Class:  Network,
+		Class:  []Class{Network, Processor},
 		Format: FormatJSON,
 	}
 	c, err := New("", config)
@@ -22,7 +22,7 @@ func TestWriteToStdout(t *testing.T) {
 
 func TestWriteToFile(t *testing.T) {
 	config := &Config{
-		Class:  Network,
+		Class:  []Class{Network, Processor},
 		Format: FormatJSON,
 	}
 	c, err := New("", config)

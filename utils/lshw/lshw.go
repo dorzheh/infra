@@ -69,7 +69,7 @@ const (
 )
 
 type Config struct {
-	Class  Class
+	Class  []Class
 	Format Format
 }
 
@@ -88,7 +88,8 @@ func New(path string, config *Config) (l *lshw, err error) {
 		}
 	}
 	l.cmd = exec.Command(path)
-	l.config = config
+	l.config = new(Config)
+	l.SetConfig(config)
 	return
 }
 
@@ -100,7 +101,10 @@ func (l *lshw) cmdreset() {
 
 func (l *lshw) SetClass(class Class) {
 	l.lock.Lock()
-	l.config.Class = class
+	if class == All {
+		l.config.Class = []Class{}
+	}
+	l.config.Class = append(l.config.Class, class)
 	l.lock.Unlock()
 }
 
@@ -112,8 +116,20 @@ func (l *lshw) SetFormat(format Format) {
 
 func (l *lshw) SetConfig(config *Config) {
 	l.lock.Lock()
-	l.config = config
-	l.lock.Unlock()
+	defer l.lock.Unlock()
+	l.config.Format = config.Format
+	if len(config.Class) == 0 {
+		l.config.Class[0] = All
+		return
+	}
+	for _, el := range config.Class {
+		if el == All {
+			l.config.Class = []Class{}
+			l.config.Class = append(l.config.Class, el)
+			break
+		}
+		l.config.Class = append(l.config.Class, el)
+	}
 }
 
 func (l *lshw) Cmd() string {
@@ -172,8 +188,10 @@ func (l *lshw) Version() (string, error) {
 }
 
 func (l *lshw) makeCmd() {
-	if l.config.Class != All {
-		l.cmd.Args = append(l.cmd.Args, []string{"-C", string(l.config.Class)}...)
+	if l.config.Class[0] != All {
+		for _, el := range l.config.Class {
+			l.cmd.Args = append(l.cmd.Args, "-C", string(el))
+		}
 	}
 	if l.config.Format != FormatEmpty {
 		l.cmd.Args = append(l.cmd.Args, string(l.config.Format))
