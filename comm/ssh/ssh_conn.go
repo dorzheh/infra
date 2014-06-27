@@ -12,13 +12,11 @@ import (
 	"github.com/dorzheh/infra/comm/common"
 )
 
-type Config common.Config
-
 type SshConn struct {
 	Client *ssh.Client
 }
 
-func NewSshConn(c *Config) (conn *SshConn, err error) {
+func NewSshConn(c *common.Config) (conn *SshConn, err error) {
 	var key ssh.Signer
 	if _, err = os.Stat(c.PrvtKeyFile); err == nil {
 		key, err = getKey(c.PrvtKeyFile)

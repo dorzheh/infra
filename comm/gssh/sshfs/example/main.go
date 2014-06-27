@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/dorzheh/infra/comm/gssh/common"
+	"github.com/dorzheh/infra/comm/common"
 	"github.com/dorzheh/infra/comm/gssh/sshfs"
 )
 

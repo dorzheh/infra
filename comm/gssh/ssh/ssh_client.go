@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 
+	ssh "github.com/dorzheh/infra/comm/common"
 	"github.com/dorzheh/infra/comm/gssh/common"
 )
 
@@ -11,7 +12,7 @@ type Client struct {
 	common *common.Client
 }
 
-func NewClient(config *common.Config) *Client {
+func NewClient(config *ssh.Config) *Client {
 	return &Client{common.NewClient(config)}
 }
 

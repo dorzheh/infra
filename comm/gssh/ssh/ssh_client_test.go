@@ -3,7 +3,7 @@ package ssh
 import (
 	"testing"
 
-	"github.com/dorzheh/infra/comm/gssh/common"
+	"github.com/dorzheh/infra/comm/common"
 )
 
 func TestRun(t *testing.T) {

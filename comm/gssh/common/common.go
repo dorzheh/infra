@@ -9,8 +9,6 @@ import (
 	"github.com/dorzheh/infra/comm/common"
 )
 
-//type Config common.Config
-
 var ask_known_hosts = regexp.MustCompile(`Are you sure you want to continue connecting (yes/no)?`)
 var ask_password = regexp.MustCompile(`password:`)
 

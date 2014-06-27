@@ -2,10 +2,12 @@ package ssh
 
 import (
 	"testing"
+
+	"github.com/dorzheh/infra/comm/common"
 )
 
 func TestRun(t *testing.T) {
-	conf := &Config{
+	conf := &common.Config{
 		Host:        "127.0.0.1",
 		Port:        "22",
 		User:        "test",

@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"os/exec"
 	"testing"
+
+	sshconf "github.com/dorzheh/infra/comm/common"
 )
 
 func TestRun(t *testing.T) {
-	conf := &Config{
+	conf := &sshconf.Config{
 		Host:        "127.0.0.1",
 		Port:        "22",
 		User:        "user",
