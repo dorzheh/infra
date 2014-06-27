@@ -4,11 +4,12 @@ import (
 	"fmt"
 	"os/exec"
 
+	ssh "github.com/dorzheh/infra/comm/common"
 	"github.com/dorzheh/infra/comm/gssh/common"
 )
 
 type Config struct {
-	Common      *common.Config
+	Common      *ssh.Config
 	SshfsPath   string
 	FusrmntPath string
 }

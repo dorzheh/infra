@@ -6,19 +6,19 @@ import (
 	"time"
 
 	"github.com/dorzheh/gexpect"
-	ssh "github.com/dorzheh/infra/comm/common"
+	"github.com/dorzheh/infra/comm/common"
 )
 
-type Config ssh.Config
+//type Config common.Config
 
 var ask_known_hosts = regexp.MustCompile(`Are you sure you want to continue connecting (yes/no)?`)
 var ask_password = regexp.MustCompile(`password:`)
 
 type Client struct {
-	*Config
+	*common.Config
 }
 
-func NewClient(config *Config) *Client {
+func NewClient(config *common.Config) *Client {
 	return &Client{config}
 }
 
