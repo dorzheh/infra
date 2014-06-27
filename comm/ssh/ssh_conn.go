@@ -9,15 +9,10 @@ import (
 	"path/filepath"
 
 	"code.google.com/p/go.crypto/ssh"
+	"github.com/dorzheh/infra/comm/common"
 )
 
-type Config struct {
-	Host        string
-	Port        string
-	User        string
-	Passwd      string
-	PrvtKeyFile string
-}
+type Config common.Config
 
 type SshConn struct {
 	Client *ssh.Client
@@ -32,7 +27,7 @@ func NewSshConn(c *Config) (conn *SshConn, err error) {
 		}
 	}
 	auth := []ssh.AuthMethod{
-		ssh.Password(c.Passwd),
+		ssh.Password(c.Password),
 		ssh.PublicKeys(key),
 	}
 	clientConfig := &ssh.ClientConfig{

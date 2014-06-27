@@ -6,18 +6,13 @@ import (
 	"time"
 
 	"github.com/dorzheh/gexpect"
+	ssh "github.com/dorzheh/infra/comm/common"
 )
+
+type Config ssh.Config
 
 var ask_known_hosts = regexp.MustCompile(`Are you sure you want to continue connecting (yes/no)?`)
 var ask_password = regexp.MustCompile(`password:`)
-
-type Config struct {
-	Host        string
-	Port        string
-	User        string
-	Password    string
-	PrvtKeyFile string
-}
 
 type Client struct {
 	*Config
