@@ -10,8 +10,8 @@ func TestRun(t *testing.T) {
 	conf := &Config{
 		Host:        "127.0.0.1",
 		Port:        "22",
-		User:        "root",
-		Password:    "d",
+		User:        "user",
+		Password:    "password",
 		PrvtKeyFile: "",
 	}
 	c := NewClient(conf)
