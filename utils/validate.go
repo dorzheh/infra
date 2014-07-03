@@ -8,16 +8,23 @@ import (
 	"os/user"
 	"regexp"
 	"runtime"
+	"syscall"
 )
 
-func ValidateUser(userName string) error {
+func ValidateUserName(userName string) error {
 	userInfo, err := user.Current()
 	if err != nil {
 		return err
 	}
 	if userInfo.Name != userName {
-		return errors.New(fmt.Sprintf("You are \"%s\",only \"%s\" is permitted to run it.",
-			userInfo.Username, userName))
+		return errors.New(fmt.Sprintf("You are not \"%s\"", userName))
+	}
+	return nil
+}
+
+func ValidateUserID(id int) error {
+	if syscall.Getuid() != id {
+		return errors.New(fmt.Sprintf("Your ID is not \"%d\"", id))
 	}
 	return nil
 }
