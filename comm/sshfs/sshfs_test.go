@@ -18,7 +18,6 @@ func TestRun(t *testing.T) {
 	}
 	sshfsConf := &Config{
 		Common:      conf,
-		SshpassPath: "",
 		SshfsPath:   "",
 		FusrmntPath: "",
 	}
