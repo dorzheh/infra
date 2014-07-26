@@ -36,7 +36,11 @@ func Extract(fileToExtract, targetLocation string) error {
 	default:
 		return errors.New("unknown compression format")
 	}
-	return exec.Command(execCmd, cmdArgs, fileToExtract, cmdArgDst, targetLocation).Run()
+	out, err := exec.Command(execCmd, cmdArgs, fileToExtract, cmdArgDst, targetLocation).CombinedOutput()
+	if err != nil {
+		return fmt.Errorf("%s [%s]", out, err)
+	}
+	return nil
 }
 
 func Archive(localExtractDir, targetArchive, file string, args ...string) error {
