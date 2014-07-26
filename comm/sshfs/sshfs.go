@@ -37,15 +37,15 @@ func NewClient(config *Config) (*Client, error) {
 }
 
 func (c *Client) Attach(remoteShare, localMount string) error {
-	cmdStr := fmt.Sprintf("%s@%s:%s %s -o port=%s,idmap=user,compression=no,nonempty,Ciphers=arcfour,StrictHostKeyChecking=no",
-		c.Common.User, c.Common.Host, remoteShare, localMount, c.Common.Port)
+	cmdStr := fmt.Sprintf(" -t fuse %s#%s@%s:%s %s -o port=%s,idmap=user,compression=no,allow_root,nonempty,Ciphers=arcfour,reconnect,transform_symlinks,StrictHostKeyChecking=no",
+		c.SshfsPath, c.Common.User, c.Common.Host, remoteShare, localMount, c.Common.Port)
 	if c.Common.PrvtKeyFile == "" {
 		cmdStr += ",password_stdin"
-		if err := utils.CmdPipe("echo", c.Common.Password, c.SshfsPath, cmdStr); err != nil {
+		if err := utils.CmdPipe("echo", c.Common.Password, "mount", cmdStr); err != nil {
 			return err
 		}
 	} else {
-		cmd := exec.Command(c.SshfsPath)
+		cmd := exec.Command("mount")
 		cmdStr += ",IdentityFile=" + c.Common.PrvtKeyFile
 		cmd.Args = append(cmd.Args, strings.Fields(cmdStr)...)
 		if out, err := cmd.CombinedOutput(); err != nil {
