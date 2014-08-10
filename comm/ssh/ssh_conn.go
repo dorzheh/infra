@@ -17,17 +17,18 @@ type SshConn struct {
 }
 
 func NewSshConn(c *common.Config) (conn *SshConn, err error) {
+	auth := []ssh.AuthMethod{
+		ssh.Password(c.Password),
+	}
 	var key ssh.Signer
 	if _, err = os.Stat(c.PrvtKeyFile); err == nil {
 		key, err = getKey(c.PrvtKeyFile)
 		if err != nil {
 			return
 		}
+		auth = append(auth, ssh.PublicKeys(key))
 	}
-	auth := []ssh.AuthMethod{
-		ssh.Password(c.Password),
-		ssh.PublicKeys(key),
-	}
+
 	clientConfig := &ssh.ClientConfig{
 		User: c.User,
 		Auth: auth,
