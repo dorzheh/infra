@@ -1,6 +1,6 @@
 // Provides mount/umount ability
 
-package utils
+package fsutils
 
 import (
 	"bufio"
@@ -30,13 +30,13 @@ func parseMountTable() ([]*procEntry, error) {
 }
 
 func parseInfoFile(r io.Reader) ([]*procEntry, error) {
-	s   := bufio.NewScanner(r)
+	s := bufio.NewScanner(r)
 	out := []*procEntry{}
 	for s.Scan() {
 		if err := s.Err(); err != nil {
 			return nil, err
 		}
-		p    := &procEntry{}
+		p := &procEntry{}
 		text := s.Text()
 		if _, err := fmt.Sscanf(text, mountinfoFormat,
 			&p.id, &p.parent, &p.major, &p.minor,

@@ -1,6 +1,6 @@
 // System related functions
 
-package utils
+package sysutils
 
 import (
 	"syscall"

@@ -1,4 +1,4 @@
-package utils
+package archutils
 
 import (
 	"errors"
@@ -6,6 +6,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/dorzheh/infra/utils/ioutils"
 )
 
 // Very simple and ugly implementation.
@@ -55,5 +57,5 @@ func Archive(localExtractDir, targetArchive, file string, args ...string) error 
 		return fmt.Errorf("%s [%s]", out, err)
 	}
 	args = append(args, file)
-	return RemoveIfExists(false, args...)
+	return ioutils.RemoveIfExists(false, args...)
 }

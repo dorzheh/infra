@@ -1,6 +1,6 @@
 // Generic functions
 
-package utils
+package ioutils
 
 import (
 	"bytes"

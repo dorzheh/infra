@@ -1,4 +1,4 @@
-package utils
+package hostutils
 
 import (
 	"fmt"
@@ -7,6 +7,9 @@ import (
 	"os"
 	"strings"
 	"syscall"
+
+	"github.com/dorzheh/infra/utils"
+	"github.com/dorzheh/infra/utils/ioutils"
 )
 
 var template = map[uint8]map[string]interface{}{
@@ -24,7 +27,7 @@ var template = map[uint8]map[string]interface{}{
 
 // SetHostname - main wrapper for the host configuration
 func SetHostname(hostname string) error {
-	if err := ValidateHostname(hostname); err != nil {
+	if err := utils.ValidateHostname(hostname); err != nil {
 		return err
 	}
 	for _, leaf := range template {

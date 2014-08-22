@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/dorzheh/infra/comm/common"
-	"github.com/dorzheh/infra/utils"
+	"github.com/dorzheh/infra/utils/ioutils"
 )
 
 type Config struct {
@@ -41,7 +41,7 @@ func (c *Client) Attach(remoteShare, localMount string) error {
 		c.SshfsPath, c.Common.User, c.Common.Host, remoteShare, localMount, c.Common.Port)
 	if c.Common.PrvtKeyFile == "" {
 		cmdStr += ",password_stdin"
-		if err := utils.CmdPipe("echo", c.Common.Password, "mount", cmdStr); err != nil {
+		if err := ioutils.CmdPipe("echo", c.Common.Password, "mount", cmdStr); err != nil {
 			return err
 		}
 	} else {

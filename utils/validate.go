@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"runtime"
 	"syscall"
+
+	"github.com/dorzheh/infra/utils/sysutils"
 )
 
 func ValidateUserName(userName string) error {
@@ -67,7 +69,7 @@ func ValidateAmountOfCpus(required int) error {
 // ValidateAmountOfRam gets amount of RAM needed for proceeding
 // The function verifies if eligable amount RAM is installed
 func ValidateAmountOfRam(minRequiredInMb int) error {
-	installedRamInMb, err := SysinfoRam()
+	installedRamInMb, err := sysutils.SysinfoRam()
 	if err != nil {
 		return err
 	}
