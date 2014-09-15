@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/dorzheh/infra/utils/ioutils"
 )
 
 var ErrorNoIpv4 = errors.New("no IPv4 address")
@@ -138,7 +140,7 @@ func ParseInterfacesRH() (map[string]map[string]string, error) {
 			}
 			pat := `DEVICE\s*=\s*` + iface.Name
 			for _, file := range files {
-				if PatternFound(file, pat) {
+				if ioutils.PatternFound(file, pat) {
 					var addr string
 					switch {
 					case netAddr == nil:
