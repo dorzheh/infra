@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"os/exec"
 	"strings"
+	"os
+	"signal"
+	"syscall"
 
 	sshconf "github.com/dorzheh/infra/comm/common"
 	"github.com/dorzheh/infra/comm/ssh"
@@ -54,3 +57,22 @@ func RunFunc(config *sshconf.Config) func(string) (string, error) {
 		return strings.TrimSpace(outstr), nil
 	}
 }
+
+// InterruptHandler is trying to release appropriate image
+// in case SIGHUP, SIGINT or SIGTERM signal received
+func InterruptHandler(fn func() error) {
+        //create a channel for interrupt handler
+        interrupt := make(chan os.Signal, 1)
+        // create an interrupt handler
+        signal.Notify(interrupt, syscall.SIGHUP, syscall.SIGINT, syscall.SIGTERM)
+        // run a seperate goroutine.It's  job is handling events in case a signal has been sent
+        go func() {
+                for {
+                        select {
+                        case <-interrupt:
+                                fn()
+                        }
+                }
+        }()
+}
+
