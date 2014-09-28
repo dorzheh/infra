@@ -10,6 +10,7 @@ import (
 
 	"github.com/dorzheh/infra/utils"
 	"github.com/dorzheh/infra/utils/ioutils"
+	"github.com/dorzheh/infra/utils/netutils"
 )
 
 var template = map[uint8]map[string]interface{}{
@@ -53,7 +54,7 @@ func SetHosts(hostname, ipv4 string) error {
 	defer fd.Close()
 	newString := fmt.Sprintf("\n%s\t%s\n", ipv4, hostname)
 	patToCheck := ipv4 + `\s+` + hostname
-	return AppendToFd(fd, newString, patToCheck)
+	return ioutils.AppendToFd(fd, newString, patToCheck)
 }
 
 // SetHostDefault sets hostname for appropriate interface
@@ -67,7 +68,7 @@ func SetHostsDefault(defaultIface string, force bool) error {
 			return nil
 		}
 	}
-	iface, err := GetIfaceAddr(defaultIface)
+	iface, err := netutils.GetIfaceAddr(defaultIface)
 	if err != nil {
 		return err
 	}
@@ -83,6 +84,6 @@ func setHostnameDebian(hostname, file string) error {
 // setHostnameRhel responsible for setting hostname for
 // a distro based on RHEL(RHEL,CentOS...)
 func setHostnameRhel(hostname, file string) error {
-	return FindAndReplace(file, file, `HOSTNAME\s*=\s*\S+`,
+	return ioutils.FindAndReplace(file, file, `HOSTNAME\s*=\s*\S+`,
 		fmt.Sprintf("HOSTNAME=%s", hostname), 0644)
 }
