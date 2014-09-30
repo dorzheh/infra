@@ -11,17 +11,19 @@ import (
 )
 
 const (
-	mountinfoFormat = "%d %d %d:%d %s %s %s"
+	mountinfoFormat = "%s %s %s %s"
 )
 
 // /proc/self/mountinfo representation
 type procEntry struct {
-	id, parent, major, minor int
-	source, mountpoint, opts string
+	source     string
+	mountpoint string
+	fs         string
+	opts       string
 }
 
 func parseMountTable() ([]*procEntry, error) {
-	f, err := os.Open("/proc/self/mountinfo")
+	f, err := os.Open("/proc/mounts")
 	if err != nil {
 		return nil, err
 	}
@@ -39,8 +41,7 @@ func parseInfoFile(r io.Reader) ([]*procEntry, error) {
 		p := &procEntry{}
 		text := s.Text()
 		if _, err := fmt.Sscanf(text, mountinfoFormat,
-			&p.id, &p.parent, &p.major, &p.minor,
-			&p.source, &p.mountpoint, &p.opts); err != nil {
+			&p.source, &p.mountpoint, &p.fs, &p.opts); err != nil {
 			return nil, fmt.Errorf("Scanning '%s' failed: %s", text, err)
 		}
 		out = append(out, p)
@@ -57,7 +58,7 @@ func Mounted(device, mountpoint string) (bool, error) {
 	}
 	// Search the table for the mountpoint
 	for _, entry := range entries {
-		if entry.mountpoint == mountpoint || strings.Contains(entry.opts, device) {
+		if entry.mountpoint == mountpoint || strings.Contains(entry.source, device) {
 			return true, nil
 		}
 	}
