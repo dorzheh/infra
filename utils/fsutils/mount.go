@@ -14,7 +14,7 @@ const (
 	mountinfoFormat = "%s %s %s %s"
 )
 
-// /proc/self/mountinfo representation
+// /proc/mounts representation
 type procEntry struct {
 	source     string
 	mountpoint string
@@ -49,7 +49,7 @@ func parseInfoFile(r io.Reader) ([]*procEntry, error) {
 	return out, nil
 }
 
-// Looks at /proc/self/mountinfo to determine of the specified
+// Looks at /proc/mounts to determine of the specified
 // mountpoint has been mounted
 func Mounted(device, mountpoint string) (bool, error) {
 	entries, err := parseMountTable()
